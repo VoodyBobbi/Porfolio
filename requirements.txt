@@ -1,0 +1,6 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+httpx==0.28.1
+python-dotenv==1.0.1
+gigachat==0.2.3
+chromadb==1.5.9

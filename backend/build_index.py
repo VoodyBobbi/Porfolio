@@ -1,0 +1,180 @@
+import os
+
+import chromadb
+from dotenv import load_dotenv
+from gigachat import GigaChat
+
+from .rag_index import (
+    CHROMA_DIR,
+    COLLECTION_NAME,
+    DATA_DIR,
+    DATA_PATH,
+    LOCAL_EMBEDDING_VERSION,
+    TECH_JSON_PATH,
+    create_embedding_function,
+    load_faq_data,
+    load_tech_stack,
+)
+
+
+load_dotenv()
+
+EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "local")
+GIGACHAT_CREDENTIALS = os.getenv("GIGACHAT_CREDENTIALS")
+GIGACHAT_MODEL = os.getenv("GIGACHAT_MODEL", "GigaChat-2")
+
+giga = None
+if EMBEDDING_PROVIDER.lower() == "gigachat":
+    if not GIGACHAT_CREDENTIALS:
+        raise RuntimeError("GIGACHAT_CREDENTIALS is required when EMBEDDING_PROVIDER=gigachat.")
+    giga = GigaChat(credentials=GIGACHAT_CREDENTIALS, model=GIGACHAT_MODEL, verify_ssl_certs=False)
+embedding_function = create_embedding_function(EMBEDDING_PROVIDER, giga)
+
+
+def _is_text_separator(line: str) -> bool:
+    stripped = line.strip()
+    return bool(stripped) and set(stripped) <= {"=", "-"}
+
+
+def parse_qa_pairs(content: str, source: str):
+    docs = []
+    current_question = None
+    answer_lines = []
+
+    def flush_current():
+        if not current_question:
+            return
+        answer = "\n".join(answer_lines).strip()
+        if answer:
+            docs.append(
+                {
+                    "question": current_question,
+                    "answer": answer,
+                    "source": source,
+                }
+            )
+
+    for raw_line in content.splitlines():
+        line = raw_line.strip()
+
+        if line.startswith("Вопрос:"):
+            flush_current()
+            current_question = line.removeprefix("Вопрос:").strip()
+            answer_lines = []
+            continue
+
+        if line.startswith("Ответ:") and current_question:
+            answer_lines.append(line.removeprefix("Ответ:").strip())
+            continue
+
+        if current_question and answer_lines:
+            if line.startswith("БЛОК ") or _is_text_separator(line):
+                continue
+            answer_lines.append(raw_line.rstrip())
+
+    flush_current()
+    return docs
+
+
+def load_txt_documents(directory: str):
+    """
+    Загружает все .txt-файлы из папки.
+    Если файл содержит блоки "Вопрос:" / "Ответ:", каждый блок становится
+    отдельным документом для поиска.
+    """
+    docs = []
+    if not os.path.isdir(directory):
+        return docs
+
+    for name in os.listdir(directory):
+        if not name.lower().endswith(".txt"):
+            continue
+        path = os.path.join(directory, name)
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                content = f.read().strip()
+        except OSError:
+            continue
+
+        if not content:
+            continue
+
+        qa_docs = parse_qa_pairs(content, name)
+        if qa_docs:
+            docs.extend(qa_docs)
+            continue
+
+        lines = content.splitlines()
+        title = next((line.strip() for line in lines if line.strip()), name)
+        body_lines = lines[1:] if len(lines) > 1 else []
+        body = "\n".join(body_lines).strip() or content
+
+        docs.append(
+            {
+                "question": title,
+                "answer": body,
+                "source": name,
+            }
+        )
+
+    return docs
+
+
+def main():
+    items = []
+
+    if os.path.exists(DATA_PATH):
+        faqs = load_faq_data(DATA_PATH)
+        items.extend(faqs)
+        print(f"Loaded {len(faqs)} FAQ items from faqs.json")
+
+    txt_docs = load_txt_documents(DATA_DIR)
+    items.extend(txt_docs)
+    print(f"Loaded {len(txt_docs)} TXT documents from {DATA_DIR}")
+
+    if os.path.exists(TECH_JSON_PATH):
+        tech_items = load_tech_stack(TECH_JSON_PATH)
+        items.extend(tech_items)
+        print(f"Loaded {len(tech_items)} technology items from tech_stack.json")
+
+    if not items:
+        raise RuntimeError("No data found to build index (no faqs.json and no txt files).")
+
+    documents = [f"{item['question']}\n{item['answer']}" for item in items]
+    metadatas = [
+        {
+            "question": item["question"],
+            "answer": item["answer"],
+            "source": item.get("source", "faqs.json"),
+        }
+        for item in items
+    ]
+    ids = [str(i) for i in range(len(items))]
+
+    os.makedirs(CHROMA_DIR, exist_ok=True)
+    client = chromadb.PersistentClient(path=CHROMA_DIR)
+
+    # пересобираем коллекцию с нуля, если она уже была
+    try:
+        client.delete_collection(COLLECTION_NAME)
+    except Exception:
+        pass
+
+    index_metadata = {"embedding_provider": EMBEDDING_PROVIDER.lower().strip()}
+    if EMBEDDING_PROVIDER.lower().strip() == "local":
+        index_metadata["local_embedding_version"] = LOCAL_EMBEDDING_VERSION
+
+    collection = client.get_or_create_collection(
+        name=COLLECTION_NAME,
+        embedding_function=embedding_function,
+        metadata=index_metadata,
+    )
+
+    print(f"Embedding {len(items)} items via {EMBEDDING_PROVIDER} and adding to ChromaDB...")
+    collection.add(ids=ids, documents=documents, metadatas=metadatas)
+
+    print(f"Index built and saved to {CHROMA_DIR} (collection: {COLLECTION_NAME})")
+
+
+if __name__ == "__main__":
+    main()

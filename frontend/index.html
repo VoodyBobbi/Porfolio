@@ -1,0 +1,1136 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI / Backend / Telegram Bots</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="icoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8de3ff"/><stop offset="0.55" stop-color="#31d3ff"/><stop offset="1" stop-color="#3cf08a"/></linearGradient></defs></svg>
+  <main class="page">
+    <header class="hero">
+      <div class="hero__layout">
+        <div class="hero__content">
+          <span class="hero__tag">ZX Spectrum → AI · Backend · Bots</span>
+          <h1>AI-агенты, Telegram-боты и backend-процессы</h1>
+          <p class="hero__desc">От архитектуры и MVP до интеграций с CRM/ERP, AI-логики и автоматизации реальных бизнес-задач.</p>
+          <div class="hero-path" aria-label="Путь компьютеризации от ZX Spectrum до AI">
+            <p class="hero-path__title">Spectrum → AI · путь по слоям</p>
+            <div class="hero-path__grid">
+              <article class="hero-step is-done">
+                <span class="hero-step__era">Старт</span>
+                <i class="hero-step__node" aria-hidden="true"></i>
+                <strong class="hero-step__name">ZX&nbsp;Spectrum</strong>
+              </article>
+              <article class="hero-step is-done">
+                <span class="hero-step__era">Системы</span>
+                <i class="hero-step__node" aria-hidden="true"></i>
+                <strong class="hero-step__name">DOS / Windows</strong>
+              </article>
+              <article class="hero-step is-done">
+                <span class="hero-step__era">Связь</span>
+                <i class="hero-step__node" aria-hidden="true"></i>
+                <strong class="hero-step__name">Сети / web</strong>
+              </article>
+              <article class="hero-step is-done">
+                <span class="hero-step__era">Web</span>
+                <i class="hero-step__node" aria-hidden="true"></i>
+                <strong class="hero-step__name">Backend</strong>
+              </article>
+              <article class="hero-step is-done">
+                <span class="hero-step__era">Процессы</span>
+                <i class="hero-step__node" aria-hidden="true"></i>
+                <strong class="hero-step__name">Automation</strong>
+              </article>
+              <article class="hero-step is-current">
+                <span class="hero-step__era">Сейчас</span>
+                <i class="hero-step__node" aria-hidden="true"></i>
+                <strong class="hero-step__name">AI-агенты</strong>
+              </article>
+            </div>
+          </div>
+          <div class="hero__metrics">
+            <article class="hero-metric">
+              <strong>От идеи до запуска</strong>
+              <span>Сценарии, backend и интеграции собираются в один рабочий контур.</span>
+            </article>
+            <article class="hero-metric">
+              <strong>Без декоративного шума</strong>
+              <span>Только те слои и сервисы, которые реально нужны процессу и поддержке.</span>
+            </article>
+            <article class="hero-metric">
+              <strong>С прицелом на прод</strong>
+              <span>Логи, retries, очереди и понятные точки расширения после MVP.</span>
+            </article>
+          </div>
+          <a class="hero__btn" href="#works">Смотреть примеры</a>
+        </div>
+
+        <div class="hero__visual">
+          <article class="mini-window mini-window--launch">
+            <div class="mini-window__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <p class="mini-window__eyebrow">Запуск</p>
+            <h3>MVP с рабочей логикой, а не просто демо</h3>
+            <p>Сразу закладываются маршруты ошибок, интеграции и состояние сценариев.</p>
+          </article>
+
+          <article class="mini-window mini-window--flow">
+            <div class="mini-window__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <p class="mini-window__eyebrow">Процесс</p>
+            <h3>AI встраивается в поток, а не живёт отдельно</h3>
+            <p>Классификация, память, сообщения и действия работают внутри бизнес-сценария.</p>
+          </article>
+
+          <article class="mini-window mini-window--control">
+            <div class="mini-window__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <p class="mini-window__eyebrow">Контроль</p>
+            <h3>Интеграции не расползаются по ручным костылям</h3>
+            <p>CRM, webhooks, очереди и уведомления держатся в читаемой архитектуре.</p>
+          </article>
+        </div>
+      </div>
+    </header>
+
+    <section class="section about" id="about">
+      <div class="section__inner">
+        <div class="sec-head"><span class="sec-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="url(#icoGrad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M15.6 8.4 L10.8 10.8 L8.4 15.6 L13.2 13.2 Z" fill="url(#icoGrad)" stroke="none"/></svg></span><h2>Про направление</h2></div>
+        <p class="section__desc">Собираю решения от архитектуры до запуска: AI-агенты, Telegram-боты и backend-сервисы, которые работают внутри реальных процессов, а не живут отдельно от бизнеса.</p>
+        <div class="about__list">
+          <article class="about__item">
+            <strong>Практический фокус</strong>
+            <p>Приоритет у скорости запуска, понятной эксплуатации и пользы для команды.</p>
+          </article>
+          <article class="about__item">
+            <strong>Нормальная архитектура</strong>
+            <p>Стек подбирается под сценарий, нагрузку и будущие изменения, без лишней сложности.</p>
+          </article>
+          <article class="about__item">
+            <strong>Спокойное сопровождение</strong>
+            <p>Логи, очереди, исключения и интеграции остаются видимыми и читаемыми после релиза.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section tools" id="tools">
+      <div class="section__inner">
+        <div class="sec-head"><span class="sec-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="url(#icoGrad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="8" x2="20" y2="8"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="9" cy="8" r="2.6" fill="#0a1424"/><circle cx="15" cy="16" r="2.6" fill="#0a1424"/></svg></span><h2>Как собираю решения</h2></div>
+        <p class="section__desc">Сначала карта сценариев и ограничений, потом выбор фреймворков и сервисов. Стек подстраивается под задачу, а не наоборот.</p>
+        <div class="tools-grid">
+          <div class="tools-panel">
+            <h3>Внутри рабочего контура</h3>
+            <ul class="tools-list">
+              <li>Определяю точки входа: формы, чат, CRM, внешние API, админские сценарии.</li>
+              <li>Разделяю роли: интерфейс, backend, AI-слой, база, очереди, уведомления.</li>
+              <li>Сразу предусматриваю хранение состояния, retries, fallback-ветки и логирование.</li>
+              <li>Оставляю понятный путь для роста после MVP: новые сценарии, роли и интеграции.</li>
+            </ul>
+          </div>
+
+          <div class="tools-visual">
+            <div class="tools-visual__frame">
+              <span>AI / Backend / Telegram</span>
+              <div class="tools-visual__label">От первого запроса до стабильного запуска в процессе</div>
+              <div class="tools-visual__metrics">
+                <span>API + Webhooks</span>
+                <span>БД + очереди</span>
+                <span>CRM + уведомления</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section trajectory" id="trajectory">
+      <div class="section__inner">
+        <div class="sec-head"><span class="sec-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="url(#icoGrad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13.5 H7 L9.4 7 L12.8 18 L15 12.5 H21"/></svg></span><h2>Темп и фокус</h2></div>
+        <p class="section__desc">Быстрый продукт не выглядит хаотичным. Когда логика, интерфейс и интеграции движутся в одном ритме, система растёт без визуального и технического шума.</p>
+        <div class="trajectory-grid">
+          <article class="trajectory-card trajectory-card--wide">
+            <img class="trajectory-card__img" src="../images/momentum-1.png" alt="Движение по футуристичному цифровому коридору" loading="lazy">
+            <div class="trajectory-card__overlay">
+              <p class="trajectory-card__eyebrow">Flow</p>
+              <h3>Архитектура выдерживает ускорение</h3>
+              <p>Сценарии, API и автоматизация не рассыпаются, когда проект начинает расти по слоям и точкам входа.</p>
+            </div>
+          </article>
+
+          <article class="trajectory-card trajectory-card--focus">
+            <img class="trajectory-card__img" src="../images/momentum-2.png" alt="Движение в архитектурном футуристичном пространстве" loading="lazy">
+            <div class="trajectory-card__overlay">
+              <p class="trajectory-card__eyebrow">Control</p>
+              <h3>Скорость остаётся управляемой</h3>
+              <ul class="trajectory-card__chips">
+                <li>Чистые переходы</li>
+                <li>Понятные слои</li>
+                <li>Рост без шума</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section works" id="works">
+      <div class="section__inner">
+        <div class="sec-head"><span class="sec-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="url(#icoGrad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="7.6" width="17.2" height="12" rx="2.4"/><path d="M8.8 7.6 V6.2 a2 2 0 0 1 2-2 h2.4 a2 2 0 0 1 2 2 v1.4"/><line x1="3.4" y1="12.6" x2="20.6" y2="12.6"/></svg></span><h2>Портфолио</h2></div>
+        <p class="section__desc">Реальные репозитории — каждая карточка кликабельна и ведёт на код в GitHub.</p>
+        <div class="work-grid">
+          <a class="work-card work-card--ai" href="https://github.com/VoodyBobbi/ADVOKAT" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>advokat.rag</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">AI + Telegram</p>
+              <h3 class="work-card__title">Юридический ИИ-консультант</h3>
+              <p class="work-card__text">Telegram-бот превращает бытовое описание ситуации в предварительную квалификацию по УК РФ. Связка «извлечение фактов → поиск статей → LLM → проверка вывода» крутится полностью локально на Ollama, без внешних API. Бот задаёт уточняющие вопросы и пересматривает вывод по ходу диалога, а не выдаёт один статичный ответ. Легко переносится на любую другую базу документов — не только на УК РФ.</p>
+              <ul class="work-card__list">
+                <li>Ollama, локально</li>
+                <li>RAG по кодексу</li>
+                <li>Telegram</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+
+          <a class="work-card work-card--bot" href="https://github.com/VoodyBobbi/Auto_saloon" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>saloon.assistants</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">3 ассистента в одном</p>
+              <h3 class="work-card__title">Нейроассистенты для автосалона</h3>
+              <p class="work-card__text">Одно локальное приложение с тремя разными ассистентами — продажи, подбор персонала и сервис — у каждого своя база знаний и промпт. Работает полностью офлайн по локальным данным, а с ключом OpenAI переходит в более гибкий AI-режим на тех же данных. Собирается в отдельный .exe: сотруднику ничего не нужно устанавливать, кроме одного файла. Пример того, как один каркас закрывает сразу несколько отделов компании, а не только чат поддержки.</p>
+              <ul class="work-card__list">
+                <li>Офлайн + OpenAI</li>
+                <li>3 роли</li>
+                <li>Сборка в .exe</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+
+          <a class="work-card work-card--api" href="https://github.com/VoodyBobbi/HR-assistent" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>hr-bot.rag</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">Telegram HR-бот</p>
+              <h3 class="work-card__title">HR-бот с голосом и фото</h3>
+              <p class="work-card__text">Бот для общения с кандидатами в Telegram, который принципиально не выдумывает ответы — отвечает только по документам и страницам сайта, которые сам же проиндексировал. Понимает голосовые сообщения и фотографии, умеет ответить голосом и сгенерировать иллюстрацию по запросу. Базу знаний пополняет на лету: скидываешь боту PDF, DOCX или ссылку на сайт компании — он сам всё разбирает и переиндексирует. Хорошая основа для любого клиентского бота, где важнее не соврать, чем казаться умным.</p>
+              <ul class="work-card__list">
+                <li>Голос + Vision</li>
+                <li>Автопарсинг сайта</li>
+                <li>RAG без галлюцинаций</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+
+          <a class="work-card work-card--ai" href="https://github.com/VoodyBobbi/hr" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>polati.hr</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">Production HR-система</p>
+              <h3 class="work-card__title">HR-ассистент для стройкомпании</h3>
+              <p class="work-card__text">Готовое production-решение для реальной компании: HR-ассистент отвечает кандидатам по вакансиям сразу в двух каналах — на сайте и в Telegram — с единой логикой и общей памятью диалога. По ходу разговора бот сам, по одному полю, заполняет анкету кандидата и сохраняет карточку, без отдельной формы. По описанию автора, такая автоматизация типовых вопросов снимает до 70–80% нагрузки с рекрутёров и сокращает время первого ответа, работая 24/7. Промпт и база знаний обновляются на лету, без перезапуска сервера.</p>
+              <ul class="work-card__list">
+                <li>Web + Telegram</li>
+                <li>FAISS + GigaChat</li>
+                <li>Анкета автоматом</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+
+          <a class="work-card work-card--bot" href="https://github.com/VoodyBobbi/shaman-ai" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>shaman.audit</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">Аудио/видео анализ</p>
+              <h3 class="work-card__title">Шаман — разбор любого разговора</h3>
+              <p class="work-card__text">Telegram-бот принимает видео, аудио, голосовое или просто ссылку на ролик, расшифровывает через AssemblyAI и прогоняет текст через собственный аналитический промпт. Вместо пересказа бот восстанавливает реальную картину происходящего — связи, интересы, скрытые зависимости, точки напряжения — и только потом даёт прогноз развития, честно помечая недостающую информацию, а не додумывая её. Все разборы сохраняются в PostgreSQL, так что по ним можно строить историю. Применимо к разбору переговоров, звонков продаж, интервью — везде, где нужен не пересказ, а трезвый анализ происходящего.</p>
+              <ul class="work-card__list">
+                <li>AssemblyAI</li>
+                <li>Анализ + прогноз</li>
+                <li>PostgreSQL</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+
+          <a class="work-card work-card--api" href="https://github.com/VoodyBobbi/Time-machine-ai" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>time-machine.gen</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">Генеративный сайт</p>
+              <h3 class="work-card__title">Машина времени</h3>
+              <p class="work-card__text">Сайт на Flask с одной, но эффектной механикой: вводишь год — GigaChat сочиняет описание эпохи, промпт усиливается, и по нему OpenAI рисует изображение, с прогресс-баром и историей последних генераций. Несколько заранее заданных стилей меняют настроение картинки без ручной правки промпта. Хорошая витрина того, как связать текстовую и графическую генерацию в один плавный сценарий, а не просто дёрнуть API. Легко переносится на другие сценарии «ввёл параметр — получил историю и картинку»: открытки, промо-механики, интерактивные визитки.</p>
+              <ul class="work-card__list">
+                <li>GigaChat</li>
+                <li>Генерация изображений</li>
+                <li>Стили + история</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+
+          <a class="work-card work-card--ai" href="https://github.com/VoodyBobbi/crypto-tracker" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>crypto.dash</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">Веб-дашборд</p>
+              <h3 class="work-card__title">Live-дашборд топ-10 крипты</h3>
+              <p class="work-card__text">Личный дашборд топ-10 криптовалют: цена, суточное изменение и капитализация обновляются каждые 30 секунд без перезагрузки страницы. Есть регистрация и вход с хешированием паролей — у каждого пользователя свой личный кабинет, а не общий экран на всех. Данные кешируются на сервере, чтобы не упираться в лимиты бесплатного API CoinGecko, а при сбое сети отдаётся последнее известное значение вместо ошибки. Шаблон, который легко адаптировать под дашборд любых живых данных — курсы валют, показатели маркетплейса, метрики продукта.</p>
+              <ul class="work-card__list">
+                <li>CoinGecko API</li>
+                <li>Auto-refresh 30s</li>
+                <li>Auth + кеш</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+
+          <a class="work-card work-card--bot" href="https://github.com/VoodyBobbi/agent-api" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>agent.api</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">Backend-шаблон</p>
+              <h3 class="work-card__title">Минимальный AI-агент на FastAPI</h3>
+              <p class="work-card__text">Минимальный production-ready каркас: FastAPI-сервис с одним эндпоинтом /chat, который проксирует запросы в Groq на модели Llama 3.3 70B — одном из самых быстрых доступных инференсов. Ни лишних зависимостей, ни лишней логики — только то, что нужно, чтобы за несколько минут поднять быстрого AI-агента и подключить любой фронтенд. Уже настроены CORS и Procfile для деплоя на Heroku/Railway. Хорошая стартовая точка, если нужен не готовый продукт, а чистый фундамент под свою логику агента.</p>
+              <ul class="work-card__list">
+                <li>Groq · Llama 3.3</li>
+                <li>FastAPI</li>
+                <li>Готов к деплою</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+
+          <a class="work-card work-card--api" href="https://github.com/VoodyBobbi/ultrashop" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>ultrashop.exe</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">Desktop, C++ / Qt6</p>
+              <h3 class="work-card__title">Витрина магазина из папки с фото</h3>
+              <p class="work-card__text">Десктопное приложение на C++/Qt6: кладёшь в папку фотографии товаров, названные по схеме «бренд_модель», и приложение само собирает из них витрину с ценами и карточками в тёмном glassmorphism-интерфейсе. Цену ищет по названию файла в открытых источниках, а если сети нет — считает её детерминированно из хеша названия, так что цена не скачет от запуска к запуску. Кнопка «Publish Showcase» поднимает витрину как веб-страницу в локальной сети — коллеги открывают её на телефоне без единой настройки. Показывает, что стек не ограничен Python и веб-бэкендом — под задачу можно собрать нативное десктоп-приложение с нуля.</p>
+              <ul class="work-card__list">
+                <li>C++ / Qt6</li>
+                <li>Авто-цены по имени файла</li>
+                <li>Публикация в LAN</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+
+          <a class="work-card work-card--ai" href="https://github.com/VoodyBobbi/Stroiaudit" target="_blank" rel="noopener noreferrer">
+            <div class="work-card__bar" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>audit.web-exe</p>
+            </div>
+            <div class="work-card__content">
+              <p class="work-card__label">Анализ конкурентов</p>
+              <h3 class="work-card__title">AI-аудит конкурентов</h3>
+              <p class="work-card__text">Инструмент для быстрого анализа конкурентов по трём входам на выбор: текст, изображение или просто ссылка на сайт. Для сайта бэкенд сам открывает страницу через Selenium, снимает скриншот и ключевой текст, а OpenAI Vision и текстовая модель возвращают структурированный разбор — сильные и слабые стороны, УТП, рекомендации, краткое резюме по единой JSON-схеме. Работает и как веб-сервис со Swagger-документацией, и как отдельное desktop-приложение под Windows (.exe) поверх того же backend, без дублирования логики. Универсальный шаблон для инструмента конкурентной или маркетинговой аналитики, а не только для одной ниши.</p>
+              <ul class="work-card__list">
+                <li>OpenAI + Vision</li>
+                <li>Selenium-парсинг</li>
+                <li>Web + Desktop</li>
+              </ul>
+              <span class="work-card__link-hint">Репозиторий на GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section expertise" id="expertise">
+      <div class="section__inner">
+        <div class="sec-head"><span class="sec-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="url(#icoGrad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 13.5 L7.4 21 L12 18.6 L16.6 21 L15.5 13.5"/><circle cx="12" cy="9" r="5.2"/></svg></span><h2>Компетенции</h2></div>
+        <p class="section__desc">Закрываю задачу не отдельным модулем, а целиком: от анализа входных условий до запуска и развития продукта.</p>
+        <div class="expertise-grid">
+          <div class="expertise-card">
+            <h3>Что беру на себя</h3>
+            <ul>
+              <li>Архитектуру backend- и AI-решения под реальный сценарий.</li>
+              <li>Telegram-ботов, формы, меню, админские ветки и чат-интерфейсы.</li>
+              <li>AI-агентов, классификацию, извлечение данных, prompt engineering и routing.</li>
+              <li>Интеграции с CRM, оплатой, Google Sheets, CMS, ERP и внешними API.</li>
+            </ul>
+          </div>
+
+          <div class="expertise-card">
+            <h3>Что получает проект</h3>
+            <ul>
+              <li>Понятную структуру: интерфейс, backend, AI-слой, БД, очереди и интеграции.</li>
+              <li>Сценарии с контролем состояний, ошибок, логов и повторных попыток.</li>
+              <li>MVP, который можно расширять, а не переписывать после первого запуска.</li>
+              <li>Продукт, встроенный в процесс команды, а не висящий отдельной витриной.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="expertise-footer">
+          <p><strong>Результат:</strong> продукт остаётся понятным после запуска и не превращается в набор несвязанных интеграций и ручных костылей.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section services" id="services">
+      <div class="section__inner">
+        <div class="sec-head"><span class="sec-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="url(#icoGrad)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3 C11 7 12 8 16 8 C12 8 11 9 11 13 C11 9 10 8 6 8 C10 8 11 7 11 3 Z" fill="url(#icoGrad)" stroke="none"/><path d="M17.6 13 C17.6 15.1 18.1 15.6 20.2 15.6 C18.1 15.6 17.6 16.1 17.6 18.2 C17.6 16.1 17.1 15.6 15 15.6 C17.1 15.6 17.6 15.1 17.6 13 Z" fill="url(#icoGrad)" stroke="none" opacity="0.82"/></svg></span><h2>Что делаю</h2></div>
+        <p class="section__desc">Набор услуг разложен по задачам, а не повторяет один и тот же тезис в разных формулировках.</p>
+        <div class="grid">
+          <article class="card">
+            <p class="card__eyebrow">01</p>
+            <h3>AI-решения</h3>
+            <p>Агенты, классификация, извлечение данных, маршрутизация и multi-step сценарии под конкретный процесс.</p>
+          </article>
+
+          <article class="card">
+            <p class="card__eyebrow">02</p>
+            <h3>Telegram-боты</h3>
+            <p>Чат-флоу, админские панели, webhooks, уведомления и интеграции с CRM, почтой и API.</p>
+          </article>
+
+          <article class="card">
+            <p class="card__eyebrow">03</p>
+            <h3>Backend &amp; API</h3>
+            <p>Python, FastAPI / Flask, базы, кеш, очереди, фоновые задачи и слой бизнес-логики.</p>
+          </article>
+
+          <article class="card">
+            <p class="card__eyebrow">04</p>
+            <h3>Автоматизация</h3>
+            <p>Обработка заявок, уведомления, документы, маршруты действий и вытеснение ручной рутины.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section education edu-strip" id="education">
+      <div class="section__inner edu-strip__inner">
+        <div class="sec-head sec-head--inline"><span class="sec-ico sec-ico--sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="url(#icoGrad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 L22 9 L12 14 L2 9 Z"/><path d="M6 11.2 V15.5 C6 17 8.7 18.2 12 18.2 C15.3 18.2 18 17 18 15.5 V11.2"/></svg></span><span class="edu-strip__label">Квалификация</span></div>
+        <ul class="edu-strip__list" aria-label="Квалификация и образование">
+          <li class="edu-chip"><span class="edu-chip__ic" aria-hidden="true">📜</span>
+            <span class="edu-chip__txt"><b>QA-инженер</b><i>Томский ГУ (Светоч) · 2023</i></span></li>
+          <li class="edu-chip"><span class="edu-chip__ic" aria-hidden="true">🐍</span>
+            <span class="edu-chip__txt"><b>Python</b><i>VK Education · 2023</i></span></li>
+          <li class="edu-chip"><span class="edu-chip__ic" aria-hidden="true">💰</span>
+            <span class="edu-chip__txt"><b>Криптоинвестиции</b><i>MoneyFest · 2024</i></span></li>
+          <li class="edu-chip"><span class="edu-chip__ic" aria-hidden="true">🌍</span>
+            <span class="edu-chip__txt"><b>Travel Agent</b><i>WorkInTravel · 2024</i></span></li>
+          <li class="edu-chip"><span class="edu-chip__ic" aria-hidden="true">⚙️</span>
+            <span class="edu-chip__txt"><b>Сварщик</b><i>Профобразование · 2020</i></span></li>
+          <li class="edu-chip"><span class="edu-chip__ic" aria-hidden="true">🛠️</span>
+            <span class="edu-chip__txt"><b>Техник</b><i>Южно-Уральский политех · 2005</i></span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section stack" id="stack">
+      <div class="section__inner">
+        <div class="sec-head"><span class="sec-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="url(#icoGrad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/><rect x="9.7" y="9.7" width="4.6" height="4.6" rx="1"/><line x1="9.2" y1="3.4" x2="9.2" y2="6.5"/><line x1="14.8" y1="3.4" x2="14.8" y2="6.5"/><line x1="9.2" y1="17.5" x2="9.2" y2="20.6"/><line x1="14.8" y1="17.5" x2="14.8" y2="20.6"/><line x1="3.4" y1="9.2" x2="6.5" y2="9.2"/><line x1="3.4" y1="14.8" x2="6.5" y2="14.8"/><line x1="17.5" y1="9.2" x2="20.6" y2="9.2"/><line x1="17.5" y1="14.8" x2="20.6" y2="14.8"/></svg></span><h2>Стек и навыки</h2></div>
+        <div class="stack-axis" aria-label="Оси стека и навыков">
+          <span class="stack-axis__item">Backend</span>
+          <span class="stack-axis__item">AI</span>
+          <span class="stack-axis__item">Integrations</span>
+          <span class="stack-axis__item">Infra</span>
+          <span class="stack-axis__item">Automation</span>
+          <span class="stack-axis__item">QA</span>
+        </div>
+        <div class="logo-grid">
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/python.svg" alt="Python logo" loading="lazy">
+            <span>Python</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/fastapi.svg" alt="FastAPI logo" loading="lazy">
+            <span>FastAPI</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/flask.svg" alt="Flask logo" loading="lazy">
+            <span>Flask</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/django.svg" alt="Django logo" loading="lazy">
+            <span>Django</span>
+          </article>
+          <article class="logo-card logo-card--telegram">
+            <img class="logo-img" src="../images/logos/telegram.svg" alt="Telegram Bot API logo" loading="lazy">
+            <span>Telegram Bot API</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/postgresql.svg" alt="PostgreSQL logo" loading="lazy">
+            <span>PostgreSQL</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/sqlalchemy.svg" alt="SQLAlchemy logo" loading="lazy">
+            <span>SQLAlchemy</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/pydantic.svg" alt="Pydantic logo" loading="lazy">
+            <span>Pydantic</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/redis.svg" alt="Redis logo" loading="lazy">
+            <span>Redis</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/celery.svg" alt="Celery logo" loading="lazy">
+            <span>Celery</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/docker.svg" alt="Docker logo" loading="lazy">
+            <span>Docker</span>
+          </article>
+          <article class="logo-card logo-card--mono">
+            <img class="logo-img" src="../images/logos/github.svg" alt="GitHub logo" loading="lazy">
+            <span>GitHub</span>
+          </article>
+          <article class="logo-card logo-card--mono">
+            <img class="logo-img" src="../images/logos/openai.svg" alt="OpenAI logo" loading="lazy">
+            <span>OpenAI</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/graphql.svg" alt="GraphQL logo" loading="lazy">
+            <span>GraphQL</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/kubernetes.svg" alt="Kubernetes logo" loading="lazy">
+            <span>Kubernetes</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/rabbitmq.svg" alt="RabbitMQ logo" loading="lazy">
+            <span>RabbitMQ</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/pytest.svg" alt="Pytest logo" loading="lazy">
+            <span>Pytest</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/googlesheets.svg" alt="Google Sheets logo" loading="lazy">
+            <span>Google Sheets</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/grafana.svg" alt="Grafana logo" loading="lazy">
+            <span>Grafana</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/typescript.svg" alt="TypeScript logo" loading="lazy">
+            <span>TypeScript</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/javascript.svg" alt="JavaScript logo" loading="lazy">
+            <span>JavaScript</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/html5.svg" alt="HTML5 logo" loading="lazy">
+            <span>HTML5</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/css3.svg" alt="CSS3 logo" loading="lazy">
+            <span>CSS3</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/react.svg" alt="React logo" loading="lazy">
+            <span>React</span>
+          </article>
+          <article class="logo-card logo-card--mono">
+            <img class="logo-img" src="../images/logos/nextdotjs.svg" alt="Next.js logo" loading="lazy">
+            <span>Next.js</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/nginx.svg" alt="Nginx logo" loading="lazy">
+            <span>Nginx</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/mongodb.svg" alt="MongoDB logo" loading="lazy">
+            <span>MongoDB</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/mysql.svg" alt="MySQL logo" loading="lazy">
+            <span>MySQL</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/linux.svg" alt="Linux logo" loading="lazy">
+            <span>Linux</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/gitlab.svg" alt="GitLab logo" loading="lazy">
+            <span>GitLab</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/jira.svg" alt="Jira logo" loading="lazy">
+            <span>Jira</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/stripe.svg" alt="Stripe logo" loading="lazy">
+            <span>Stripe</span>
+          </article>
+          <article class="logo-card logo-card--mono">
+            <img class="logo-img" src="../images/logos/notion.svg" alt="Notion logo" loading="lazy">
+            <span>Notion</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/prometheus.svg" alt="Prometheus logo" loading="lazy">
+            <span>Prometheus</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/sentry.svg" alt="Sentry logo" loading="lazy">
+            <span>Sentry</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/selenium.svg" alt="Selenium logo" loading="lazy">
+            <span>Selenium</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/playwright.svg" alt="Playwright logo" loading="lazy">
+            <span>Playwright</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/celery.svg" alt="Celery Beat logo" loading="lazy">
+            <span>Celery Beat</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/langchain.svg" alt="LangChain logo" loading="lazy">
+            <span>LangChain</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/langgraph.svg" alt="LangGraph logo" loading="lazy">
+            <span>LangGraph</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/llamaindex.svg" alt="LlamaIndex logo" loading="lazy">
+            <span>LlamaIndex</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/openrouter.svg" alt="OpenRouter logo" loading="lazy">
+            <span>OpenRouter</span>
+          </article>
+          <article class="logo-card logo-card--mono">
+            <img class="logo-img" src="../images/logos/ollama.svg" alt="Ollama logo" loading="lazy">
+            <span>Ollama</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/vllm.svg" alt="vLLM logo" loading="lazy">
+            <span>vLLM</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/htmx.svg" alt="HTMX logo" loading="lazy">
+            <span>HTMX</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/tailwindcss.svg" alt="Tailwind CSS logo" loading="lazy">
+            <span>Tailwind CSS</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/n8n.svg" alt="n8n logo" loading="lazy">
+            <span>n8n</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/make.svg" alt="Make logo" loading="lazy">
+            <span>Make</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/zapier.svg" alt="Zapier logo" loading="lazy">
+            <span>Zapier</span>
+          </article>
+          <article class="logo-card">
+            <img class="logo-img" src="../images/logos/nats.svg" alt="NATS logo" loading="lazy">
+            <span>NATS</span>
+          </article>
+        </div>
+
+        <div class="skills-board">
+          <div class="skills-column">
+            <article class="skill-category">
+            <p class="skill-category__eyebrow">Backend / API</p>
+            <h3>Сервисы, протоколы и runtime</h3>
+            <p class="skill-category__intro">Основа серверной части: Python-стек, API-интерфейсы, сетевые протоколы и конкурентное выполнение.</p>
+            <ul class="skill-cloud">
+              <li>Python</li>
+              <li>FastAPI</li>
+              <li>Flask</li>
+              <li>Django</li>
+              <li>Starlette</li>
+              <li>aiohttp</li>
+              <li>httpx</li>
+              <li>Uvicorn</li>
+              <li>Gunicorn</li>
+              <li>REST API</li>
+              <li>Webhooks</li>
+              <li>GraphQL</li>
+              <li>gRPC</li>
+              <li>WebSocket</li>
+              <li>SSE</li>
+              <li>asyncio</li>
+              <li>async programming</li>
+              <li>multithreading basics</li>
+              <li>multiprocessing basics</li>
+              <li>API design</li>
+              <li>API versioning</li>
+              <li>DTO</li>
+              <li>Serialization</li>
+              <li>Data validation</li>
+              <li>Middleware</li>
+            </ul>
+            </article>
+
+            <article class="skill-category">
+              <p class="skill-category__eyebrow">DevOps / Security</p>
+              <h3>Инфраструктура, доставка и защищённая эксплуатация</h3>
+              <p class="skill-category__intro">Контейнеризация, деплой, наблюдаемость и базовая безопасность для живого production-контура.</p>
+              <ul class="skill-cloud">
+                <li>Docker</li>
+                <li>Docker Compose</li>
+                <li>Linux</li>
+                <li>Nginx</li>
+                <li>Traefik</li>
+                <li>CI/CD</li>
+                <li>Git</li>
+                <li>GitHub</li>
+                <li>GitHub Actions</li>
+                <li>GitLab CI</li>
+                <li>deployment</li>
+                <li>containerization</li>
+                <li>reverse proxy</li>
+                <li>server setup</li>
+                <li>environment management</li>
+                <li>secrets management basics</li>
+                <li>monitoring basics</li>
+                <li>logging</li>
+                <li>tracing basics</li>
+                <li>health checks</li>
+                <li>metrics basics</li>
+                <li>Prometheus</li>
+                <li>Grafana</li>
+                <li>Sentry</li>
+                <li>debugging</li>
+                <li>profiling basics</li>
+                <li>error handling</li>
+                <li>observability basics</li>
+                <li>JWT</li>
+                <li>OAuth2</li>
+                <li>OpenID Connect</li>
+                <li>RBAC</li>
+                <li>API security</li>
+                <li>webhook verification</li>
+                <li>rate limiting</li>
+                <li>idempotency</li>
+                <li>input validation</li>
+                <li>secure coding basics</li>
+                <li>Cloudflare</li>
+                <li>AWS basics</li>
+                <li>GCP basics</li>
+                <li>Yandex Cloud basics</li>
+                <li>DigitalOcean</li>
+                <li>Kubernetes basics</li>
+                <li>Terraform basics</li>
+                <li>Ansible basics</li>
+              </ul>
+            </article>
+
+            <article class="skill-category">
+              <p class="skill-category__eyebrow">Architecture / Delivery</p>
+              <h3>Архитектура решения и качество реализации</h3>
+              <p class="skill-category__intro">Системное проектирование, читаемость кода и структура решения, рассчитанная на поддержку и дальнейший рост.</p>
+              <ul class="skill-cloud">
+                <li>system design basics</li>
+                <li>solution architecture basics</li>
+                <li>backend architecture</li>
+                <li>integration architecture</li>
+                <li>AI system design</li>
+                <li>clean architecture</li>
+                <li>layered architecture</li>
+                <li>service layer</li>
+                <li>modular design</li>
+                <li>dependency injection</li>
+                <li>domain modeling</li>
+                <li>business logic isolation</li>
+                <li>refactoring</li>
+                <li>code readability</li>
+                <li>maintainability</li>
+                <li>scalability thinking</li>
+                <li>production support</li>
+                <li>technical documentation</li>
+                <li>technical audit basics</li>
+                <li>mypy</li>
+                <li>Ruff</li>
+                <li>Black</li>
+              </ul>
+            </article>
+
+            <article class="skill-category">
+            <p class="skill-category__eyebrow">QA / Soft Skills</p>
+            <h3>Смежные soft skills для QA</h3>
+            <p class="skill-category__intro">То, что делает тестирование полезным для команды: ясность, воспроизводимость и спокойная аналитика без шума.</p>
+            <ul class="skill-cloud">
+              <li>Attention to detail</li>
+              <li>Analytical thinking</li>
+              <li>Clear communication</li>
+              <li>Reproducibility mindset</li>
+              <li>Structured reporting</li>
+              <li>Critical thinking</li>
+              <li>Root cause analysis basics</li>
+            </ul>
+            </article>
+          </div>
+
+          <div class="skills-column">
+            <article class="skill-category">
+            <p class="skill-category__eyebrow">Data / Storage</p>
+            <h3>Модели данных, базы и состояние</h3>
+            <p class="skill-category__intro">Хранилища, ORM-слой и структура данных для приложений, ботов, AI-сценариев и интеграций.</p>
+            <ul class="skill-cloud">
+              <li>SQLAlchemy</li>
+              <li>Pydantic</li>
+              <li>Alembic</li>
+              <li>Peewee</li>
+              <li>Tortoise ORM</li>
+              <li>PostgreSQL</li>
+              <li>Redis</li>
+              <li>MySQL</li>
+              <li>SQLite</li>
+              <li>MongoDB</li>
+              <li>Elasticsearch</li>
+              <li>pgvector</li>
+              <li>MinIO</li>
+              <li>S3</li>
+              <li>data modeling</li>
+              <li>schema design</li>
+              <li>indexing</li>
+              <li>transactions</li>
+              <li>migrations</li>
+              <li>caching</li>
+              <li>session storage</li>
+              <li>queue storage</li>
+              <li>state management</li>
+              <li>data consistency</li>
+              <li>data normalization</li>
+              <li>JSON fields</li>
+            </ul>
+            </article>
+
+            <article class="skill-category">
+            <p class="skill-category__eyebrow">Queues / Async</p>
+            <h3>Очереди, фоновые задачи и event flow</h3>
+            <p class="skill-category__intro">Асинхронная обработка, отложенные действия и оркестрация рабочих сценариев после первого пользовательского события.</p>
+            <ul class="skill-cloud">
+              <li>Celery</li>
+              <li>RQ</li>
+              <li>APScheduler</li>
+              <li>Celery Beat</li>
+              <li>cron</li>
+              <li>background jobs</li>
+              <li>background tasks</li>
+              <li>delayed tasks</li>
+              <li>retry logic</li>
+              <li>batch processing</li>
+              <li>task orchestration</li>
+              <li>event-driven architecture</li>
+              <li>pub/sub basics</li>
+              <li>RabbitMQ</li>
+              <li>Kafka</li>
+              <li>NATS basics</li>
+            </ul>
+            </article>
+
+            <article class="skill-category">
+            <p class="skill-category__eyebrow">AI / LLM / Agents</p>
+            <h3>LLM, retrieval и агентные сценарии</h3>
+            <p class="skill-category__intro">Работа с моделями, structured outputs, маршрутизацией и многослойной AI-логикой в прикладных продуктах.</p>
+            <ul class="skill-cloud">
+              <li>OpenAI API</li>
+              <li>Anthropic API</li>
+              <li>Gemini API</li>
+              <li>OpenRouter</li>
+              <li>Ollama</li>
+              <li>vLLM</li>
+              <li>LLM APIs</li>
+              <li>prompt engineering</li>
+              <li>system prompts</li>
+              <li>role prompts</li>
+              <li>structured outputs</li>
+              <li>JSON schema</li>
+              <li>function calling</li>
+              <li>tool calling</li>
+              <li>AI agents</li>
+              <li>multi-step agents</li>
+              <li>AI orchestration</li>
+              <li>context management</li>
+              <li>memory patterns</li>
+              <li>conversation state</li>
+              <li>RAG</li>
+              <li>retrieval pipelines</li>
+              <li>embeddings basics</li>
+              <li>vector search</li>
+              <li>knowledge base systems</li>
+              <li>semantic search basics</li>
+              <li>reranking basics</li>
+              <li>guardrails basics</li>
+              <li>output validation</li>
+              <li>AI routing</li>
+              <li>classification pipelines</li>
+              <li>extraction pipelines</li>
+              <li>summarization pipelines</li>
+              <li>generation pipelines</li>
+              <li>prompt optimization</li>
+              <li>latency optimization</li>
+              <li>cost optimization</li>
+              <li>hybrid logic AI + code</li>
+              <li>LangChain</li>
+              <li>LangGraph</li>
+              <li>LlamaIndex</li>
+              <li>evaluation basics</li>
+              <li>fallback logic</li>
+              <li>human-in-the-loop flows</li>
+            </ul>
+            </article>
+
+            <article class="skill-category">
+            <p class="skill-category__eyebrow">Frontend / UI</p>
+            <h3>Интерфейсы, формы и операторские панели</h3>
+            <p class="skill-category__intro">Лёгкий frontend-слой для админок, dashboard-интерфейсов, форм и связки клиента с backend.</p>
+            <ul class="skill-cloud">
+              <li>HTML</li>
+              <li>CSS</li>
+              <li>JavaScript</li>
+              <li>TypeScript</li>
+              <li>React</li>
+              <li>Next.js</li>
+              <li>Jinja2</li>
+              <li>HTMX</li>
+              <li>Tailwind basics</li>
+              <li>admin UI basics</li>
+              <li>dashboard UI basics</li>
+              <li>form handling</li>
+              <li>API integration frontend/backend</li>
+            </ul>
+            </article>
+          </div>
+
+          <div class="skills-column">
+            <article class="skill-category">
+              <p class="skill-category__eyebrow">Bots / Integrations</p>
+              <h3>Telegram, CRM и внешние сервисы</h3>
+              <p class="skill-category__intro">Боты, операционные интерфейсы и прикладные интеграции, которые реально встраиваются в процесс команды.</p>
+              <ul class="skill-cloud">
+                <li>Aiogram</li>
+                <li>Telegram Bot API</li>
+                <li>FSM</li>
+                <li>dialog flows</li>
+                <li>callback queries</li>
+                <li>inline keyboards</li>
+                <li>command routing</li>
+                <li>chat UX</li>
+                <li>conversational design</li>
+                <li>admin panels</li>
+                <li>operator dashboards</li>
+                <li>support bots</li>
+                <li>sales bots</li>
+                <li>internal tools</li>
+                <li>notification systems</li>
+                <li>broadcast systems</li>
+                <li>CRM integrations</li>
+                <li>ERP integrations basics</li>
+                <li>amoCRM</li>
+                <li>Bitrix24</li>
+                <li>HubSpot</li>
+                <li>Salesforce basics</li>
+                <li>payment integrations</li>
+                <li>Stripe</li>
+                <li>ЮKassa</li>
+                <li>email APIs</li>
+                <li>SMS APIs</li>
+                <li>Google Sheets API</li>
+                <li>Google Drive API</li>
+                <li>Notion API</li>
+                <li>Airtable</li>
+                <li>Trello API</li>
+                <li>Slack API</li>
+                <li>Discord bots basics</li>
+              </ul>
+            </article>
+
+            <article class="skill-category">
+              <p class="skill-category__eyebrow">Automation / Product</p>
+              <h3>Автоматизация, документы и продуктовый слой</h3>
+              <p class="skill-category__intro">Инструменты для парсинга, отчётов, workflow-автоматизации и прикладной бизнес-логики вокруг MVP.</p>
+              <ul class="skill-cloud">
+                <li>Pandas</li>
+                <li>openpyxl</li>
+                <li>CSV pipelines</li>
+                <li>JSON pipelines</li>
+                <li>XML pipelines</li>
+                <li>PDF parsing basics</li>
+                <li>OCR basics</li>
+                <li>ETL light pipelines</li>
+                <li>web scraping basics</li>
+                <li>parsing</li>
+                <li>automation design</li>
+                <li>workflow automation</li>
+                <li>process optimization</li>
+                <li>lead processing</li>
+                <li>support automation</li>
+                <li>sales funnel automation</li>
+                <li>document generation</li>
+                <li>report generation</li>
+                <li>content pipelines</li>
+                <li>MVP development</li>
+                <li>product thinking</li>
+                <li>feature scoping</li>
+                <li>trade-off analysis</li>
+                <li>business logic design</li>
+                <li>operator flows</li>
+                <li>internal process automation</li>
+                <li>n8n</li>
+                <li>Make</li>
+                <li>Zapier</li>
+              </ul>
+            </article>
+
+            <article class="skill-category">
+              <p class="skill-category__eyebrow">QA / Testing</p>
+              <h3>Тестирование и контроль качества</h3>
+              <p class="skill-category__intro">Ручное и прикладное QA-сопровождение: от сценариев и проверки API до релизной валидации и документации.</p>
+              <ul class="skill-cloud">
+                <li>Manual testing</li>
+                <li>QA engineering</li>
+                <li>QA basics</li>
+                <li>Test cases</li>
+                <li>Test plans</li>
+                <li>Regression testing</li>
+                <li>Smoke testing</li>
+                <li>Sanity testing</li>
+                <li>Functional testing</li>
+                <li>Integration testing</li>
+                <li>API testing</li>
+                <li>UI testing</li>
+                <li>End-to-end testing</li>
+                <li>Exploratory testing</li>
+                <li>Cross-browser testing</li>
+                <li>Mobile testing basics</li>
+                <li>Performance testing basics</li>
+                <li>Load testing basics</li>
+                <li>Bug reporting</li>
+                <li>Test documentation</li>
+                <li>Test design</li>
+                <li>Edge cases analysis</li>
+                <li>Acceptance testing</li>
+                <li>UAT support</li>
+                <li>SQL for testing</li>
+                <li>Postman</li>
+                <li>Pytest</li>
+                <li>Selenium basics</li>
+                <li>Playwright basics</li>
+                <li>Test automation basics</li>
+                <li>Contract testing basics</li>
+                <li>Mocking basics</li>
+                <li>Validation of business logic</li>
+                <li>Error reproduction</li>
+                <li>Release verification</li>
+                <li>Quality control</li>
+                <li>Quality assurance</li>
+                <li>SDLC basics</li>
+                <li>STLC basics</li>
+                <li>Requirement analysis</li>
+                <li>Risk-based testing</li>
+                <li>Checklists</li>
+                <li>Test data preparation</li>
+                <li>Defect lifecycle</li>
+                <li>Jira / issue tracking</li>
+                <li>Locust</li>
+                <li>Testcontainers basics</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <p>Готов превращать задачи в работающие продукты с понятной архитектурой, аккуратным интерфейсом и AI внутри реального процесса.</p>
+        <p class="footer__note">Контакт - телеграм <a class="footer__link" href="https://t.me/Ivan_Paro" target="_blank" rel="noopener noreferrer">@Ivan_Paro</a></p>
+      </div>
+    </footer>
+  </main>
+
+  <button class="chat-launcher" id="chat-launcher" aria-label="Открыть FAQ-ассистента">
+    <span>💬</span>
+  </button>
+
+  <div class="chat-widget" id="chat-widget" style="display:none;">
+    <div class="chat-header">
+      <div class="chat-title">Можете задать вопрос сюда</div>
+      <button class="chat-close" id="chat-close" aria-label="Закрыть чат">×</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-footer">
+      <input
+        id="chat-input"
+        class="chat-input"
+        placeholder="Напишите вопрос..."
+      />
+      <button id="chat-send" class="chat-send">
+        <span>➤</span>
+      </button>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
