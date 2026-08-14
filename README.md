@@ -1,145 +1,63 @@
-## FAQ-ассистент для портфолио
+Портфолио Ивана Паро — сайт + FAQ RAG-ассистент
+Сайт-визитка с AI-ассистентом. Отвечает про стек, опыт, процесс и цены по локальной базе знаний. GigaChat используется только для генерации ответов, не для эмбеддингов.
 
-Проект состоит из статического портфолио и FAQ-чата: frontend-страница с виджетом отправляет вопрос на FastAPI backend, backend ищет релевантные ответы в ChromaDB и формирует ответ через GigaChat. Поиск по FAQ по умолчанию работает на локальных embeddings (без внешнего API) — это hashing-поиск по словам и n-граммам, а не полноценный семантический поиск; подробности и ограничения описаны в docstring `LocalEmbeddingFunction` (`backend/rag_index.py`). Для более качественного поиска по смыслу переключите `EMBEDDING_PROVIDER=gigachat` (эмбеддинги тогда считает GigaChat Embeddings API; после смены провайдера индекс нужно пересобрать — см. ниже).
+Как работает
+frontend/index.html → виджет чата → POST /chat на FastAPI → локальный поиск по ChromaDB → промпт с FAQ → GigaChat (или фолбэк без LLM) → ответ + сохранение истории в SQLite.
 
-### Структура
+Поиск (эмбеддинги)
+Только локальный, без внешних API:
 
-- `frontend/` - статическая страница портфолио, CSS и JavaScript виджета чата.
-- `images/` - изображения и логотипы, используемые frontend.
-- `backend/app.py` - FastAPI-приложение, эндпоинты `/chat` и `/health`.
-- `backend/build_index.py` - построение ChromaDB-индекса из FAQ-данных.
-- `backend/rag_index.py` - загрузка индекса и поиск похожих FAQ.
-- `backend/history_store.py` - история диалогов (SQLite, `data/sessions.db`) — переживает перезапуск backend, в отличие от хранения в памяти процесса.
-- `data/qa_database.txt` - база вопросов и ответов для ассистента.
-- `data/tech_stack.json` - справочные данные по стеку (тоже попадает в индекс, см. ниже).
+LocalEmbeddingFunction в backend/rag_index.py — hashing trick: хеш слов + 4-граммы символов
+Размерность 1536, нормализация L2, версия 2-ngram-1536d
+Ловит точные и однокоренные формы (важно для русского), не ловит синонимы без общих букв
+ChromaDB вызывает эту функцию сама, своих эмбеддингов не делает: collection.query() → LocalEmbeddingFunction.__call__() → вектор
+GigaChat для эмбеддингов не используется. Требуется только для giga.chat() в app.py.
 
-### Подготовка
-
-Создайте и активируйте виртуальное окружение:
-
-```bash
+Состав
+backend/app.py — FastAPI /chat, /health, CORS по ALLOWED_ORIGINS, история 12 сообщений
+backend/rag_index.py — LocalEmbeddingFunction, load_index(), search_similar()
+backend/build_index.py — парсер Вопрос:/Ответ: из data/*.txt + tech_stack.json → data/chroma_db/
+backend/history_store.py — SQLite sessions.db, TTL 30 дней, WAL
+frontend/ — index.html, style.css, script.js (тогглы скиллов, scroll-reveal, API_BASE localhost:8000 vs /api)
+data/qa_database.txt — FAQ, tech_stack.json — 32 технологии с keywords
+requirements.txt
+Установка
+bash
 py -3.11 -m venv venv
 venv\Scripts\activate
-```
+pip install -r requirements.txt
+.env (пример в .env.example):
 
-Установите зависимости:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-В корне проекта нужен файл `.env`:
-
-```env
-GIGACHAT_CREDENTIALS=ваш_ключ_gigachat
+GIGACHAT_CREDENTIALS=...
 GIGACHAT_MODEL=GigaChat-2
-EMBEDDING_PROVIDER=local
 ALLOWED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000,http://localhost:5500
 IVAN_TELEGRAM=https://t.me/Ivan_Paro
-```
-
-Всё, кроме `GIGACHAT_CREDENTIALS`, необязательно:
-
-- `GIGACHAT_MODEL` — по умолчанию `GigaChat-2`.
-- `EMBEDDING_PROVIDER` — по умолчанию `local`. `gigachat` даёт более качественный поиск по смыслу, но требует пересборки индекса при переключении — backend сам это проверит при старте и откажется запускаться, если текущий провайдер не совпадает с тем, каким индекс был построен.
-- `ALLOWED_ORIGINS` — список доменов через запятую, с которых разрешено обращаться к `/chat` (CORS). По умолчанию — локальные адреса для разработки. **В проде обязательно впишите сюда настоящий домен сайта**, иначе виджет на реальном домене не сможет достучаться до backend.
-- `IVAN_TELEGRAM` — ссылка на Telegram, которую ассистент даёт вместо признания «я не знаю».
-- `SYSTEM_PROMPT` — можно целиком переопределить системный промпт ассистента, не трогая код (по умолчанию используется промпт из `backend/app.py`).
-
-### Индекс
-
-Перед запуском backend постройте локальный индекс:
-
-```bash
+SYSTEM_PROMPT=опционально
+Индекс
+bash
 python -m backend.build_index
-```
+Пересобирать при изменении qa_database.txt или tech_stack.json или версии LOCAL_EMBEDDING_VERSION.
 
-Скрипт индексирует:
-- `data/*.txt` — файлы с блоками `Вопрос:` / `Ответ:` (например, `qa_database.txt`) разбираются на отдельные документы, каждый FAQ — отдельная запись в индексе;
-- `data/tech_stack.json` — каждая технология из списка тоже становится отдельным документом (сейчас 32 записи).
+Запуск
+bash
+uvicorn backend.app:app --reload --host 127.0.0.1 --port 8000
+# frontend
+cd frontend && python -m http.server 5500
+GET /health → {"status":"ok"}
 
-Индекс сохраняется в `data/chroma_db/` вместе с меткой, каким `EMBEDDING_PROVIDER` он был построен, — это нужно backend'у, чтобы не запуститься со сломанным поиском при смене провайдера в `.env` без пересборки индекса.
+POST /chat:
 
-### Запуск
+json
+{"message":"Чем занимается Иван?","top_k":3,"session_id":"опционально"}
+Логика: load_history → search_similar → context_text → Chat(messages=[SYSTEM, ...history, user+context]) → giga.chat() или build_fallback_answer() (выбирает из top_k по пересечению токенов TOKEN_RE) → save_history.
 
-Backend:
+Деплой
+Nginx проксирует /api/ на backend:
 
-```bash
-python -m uvicorn backend.app:app --reload --host 127.0.0.1 --port 8000
-```
+location /api/ { proxy_pass http://127.0.0.1:8000/; }
+Добавьте прод-домен в ALLOWED_ORIGINS.
 
-Проверка backend:
-
-```bash
-curl http://127.0.0.1:8000/health
-```
-
-Frontend при локальной разработке лучше раздавать простым http-сервером, а не открывать двойным кликом — тогда браузер отправляет настоящий `Origin`, и CORS на backend ведёт себя предсказуемо:
-
-```bash
-cd frontend
-python -m http.server 5500
-```
-
-и открыть `http://localhost:5500`. (Открыть `frontend/index.html` напрямую тоже сработает — `API_BASE` в `script.js` подстраивается и под `file://` — но раздача через http-сервер ближе к тому, как страница будет вести себя в проде.)
-
-Чат во frontend отправляет запросы на `API_BASE + "/chat"`, где `API_BASE` определяется автоматически (`frontend/script.js`): локально — `http://localhost:8000`, на реальном домене — тот же домен + `/api` (см. раздел «Деплой»). Если GigaChat недоступен или возвращает ошибку лимитов/оплаты, backend не падает и отвечает ближайшим найденным FAQ, а сам сбой пишет в лог процесса — чтобы это было видно, а не терялось молча.
-
-### Деплой
-
-На сервере предполагается, что backend (`uvicorn`/`gunicorn`, порт 8000) стоит за Nginx на том же домене, что и статический frontend, и что запросы на `/api/*` проксируются на backend с обрезкой префикса, например:
-
-```nginx
-location /api/ {
-    proxy_pass http://127.0.0.1:8000/;
-}
-```
-
-Если backend вместо этого будет жить на отдельном домене/поддомене (например, `api.вашдомен.ru`) — впишите его явно в `API_BASE` внутри `frontend/script.js` вместо автоопределения через `/api`.
-
-Не забудьте прописать реальный домен сайта в `ALLOWED_ORIGINS` в `.env` на сервере.
-
-### Безопасность
-
-- `.env` содержит боевой ключ GigaChat — не коммитьте его (он уже в `.gitignore`) и не публикуйте нигде, включая переписки с ИИ-ассистентами и скриншоты. Если ключ всё же куда-то «засветился» — перевыпустите его в личном кабинете GigaChat.
-- CORS ограничен списком доменов из `ALLOWED_ORIGINS`, а не открыт всем (`*`).
-
-### API
-
-`POST /chat`
-
-Вход:
-
-```json
-{
-  "message": "Чем занимается Иван?",
-  "top_k": 3,
-  "session_id": "необязательно — если не передать, backend создаст новую сессию"
-}
-```
-
-Выход:
-
-```json
-{
-  "answer": "...",
-  "context": [
-    {
-      "question": "...",
-      "answer": "...",
-      "source": "qa_database.txt"
-    }
-  ],
-  "session_id": "uuid сессии — передавайте его в следующих запросах, чтобы ассистент помнил историю диалога"
-}
-```
-
-`GET /health`
-
-Возвращает:
-
-```json
-{
-  "status": "ok"
-}
-```
+Замечания
+verify_ssl_certs=False в GigaChat — включите проверку в проде
+history_store с check_same_thread=False — не для workers>1, для масштаба — Redis
+Rate-limit на /chat добавляйте на Nginx
