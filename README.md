@@ -20,15 +20,9 @@
    GIGACHAT_CREDENTIALS=ваш_ключ
    ```
    Без ключа бот тоже работает — просто отвечает готовыми фразами из базы, без GigaChat.
-6. Собрать базу знаний: `python -m backend.build_index`
-7. Запустить backend: `uvicorn backend.app:app --reload --host 127.0.0.1 --port 8000`
-8. Во втором терминале запустить frontend:
-   ```powershell
-   cd frontend
-   python -m http.server 5500
-   ```
+6. Запустить всё (сайт + API, индекс базы соберётся сам при первом запуске): `uvicorn backend.app:app --reload --host 127.0.0.1 --port 8000`
 
-Сайт: http://127.0.0.1:5500
+Сайт: http://127.0.0.1:8000
 Проверка backend: http://127.0.0.1:8000/health
 
 ## Обновить базу знаний
@@ -47,15 +41,9 @@
 |---|---|---|
 | `GIGACHAT_MODEL` | какую модель GigaChat использовать | `GigaChat-2` — самая дешёвая и быстрая |
 | `ALLOWED_ORIGINS` | с каких доменов разрешены запросы к backend | только localhost |
-| `IVAN_TELEGRAM` | куда бот направляет, если не может ответить | `https://t.me/Ivan_Paro` |
 | `SYSTEM_PROMPT` | полностью своя инструкция для ассистента | встроенная в код |
 
 ## Деплой
 
 - Домен сайта нужно добавить в `ALLOWED_ORIGINS`.
-- Frontend ждёт backend по адресу `/api` — настраивается через Nginx:
-  ```nginx
-  location /api/ {
-      proxy_pass http://127.0.0.1:8000/;
-  }
-  ```
+- Сайт и API — один процесс на одном порту (см. выше). Nginx (или другой прокси) достаточно направить на этот один порт, никакого отдельного `/api`-роутинга не нужно.

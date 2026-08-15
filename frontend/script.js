@@ -93,26 +93,10 @@
 // globals into the rest of this file.
 // ============================================================
 (function setupChatWidget() {
-  // Раньше тут был жёстко зашит "http://localhost:8000" — работало только
-  // локально, а после деплоя адрес нужно было руками менять в коде. Теперь
-  // определяется автоматически:
-  //  - открыли файл напрямую (file://) или зашли через localhost/127.0.0.1
-  //    (например, `python -m http.server` из папки frontend) — backend
-  //    считается локальным, на порту 8000;
-  //  - любой другой домен (реальный деплой) — берём тот же домен + /api,
-  //    подразумевая reverse-proxy в Nginx, который пробрасывает /api на
-  //    backend (см. README, раздел "Деплой").
-  // Если backend живёт на отдельном домене/поддомене — впишите его явно
-  // вместо строки с window.location.origin, например:
-  //   return "https://api.вашдомен.ru";
-  var API_BASE = (function () {
-    var isLocal =
-      window.location.protocol === "file:" ||
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1";
-    if (isLocal) return "http://localhost:8000";
-    return window.location.origin + "/api";
-  })();
+  // Frontend теперь отдаётся тем же backend-процессом (см. app.py, StaticFiles
+  // на "/"), поэтому чат и сайт всегда на одном origin — просто относительный
+  // путь, без завязки на конкретный домен/порт что при разработке, что в проде.
+  var API_BASE = "";
 
   var SESSION_STORAGE_KEY = "faq_chat_session_id";
 

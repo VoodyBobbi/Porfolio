@@ -6,6 +6,7 @@ from typing import Any, Dict, List
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from gigachat import GigaChat
 from gigachat.models import Chat, Messages, MessagesRole
 from pydantic import BaseModel, Field
@@ -27,7 +28,9 @@ GIGACHAT_CREDENTIALS = os.getenv("GIGACHAT_CREDENTIALS")
 # прайс-листе называется "GigaChat 2 Lite" (это маркетинговое название, не
 # значение для API). "GigaChat-2-Lite" как строка для API не существует.
 GIGACHAT_MODEL = os.getenv("GIGACHAT_MODEL", "GigaChat-2")
-IVAN_TELEGRAM = os.getenv("IVAN_TELEGRAM", "https://t.me/Ivan_Paro")
+# Не берём из .env: адрес уже есть в подвале сайта (frontend/index.html) и
+# тут, в коде. Если понадобится сменить — правьте здесь, руками, осознанно.
+IVAN_TELEGRAM = "https://t.me/Ivan_Paro"
 
 giga = None
 if GIGACHAT_CREDENTIALS:
@@ -74,7 +77,26 @@ class ChatResponse(BaseModel):
     session_id: str
 
 
-collection = load_index(CHROMA_DIR, COLLECTION_NAME, embedding_function)
+def _load_or_build_index():
+    """
+    Обычно индекс уже есть и просто открывается — быстро. Но если его нет
+    (первый запуск после скачивания проекта) или он устарел (поменялась
+    версия embedding-алгоритма — load_index() как раз это и проверяет),
+    собираем его прямо тут, автоматически. Это и есть та самая "одна
+    команда": `python -m backend.build_index` больше не нужно помнить и
+    запускать отдельно — `uvicorn ...` теперь делает всё сам.
+    """
+    try:
+        return load_index(CHROMA_DIR, COLLECTION_NAME, embedding_function)
+    except RuntimeError:
+        logger.info("Индекс отсутствует или устарел — собираю автоматически...")
+        from . import build_index as _build_index
+
+        _build_index.main()
+        return load_index(CHROMA_DIR, COLLECTION_NAME, embedding_function)
+
+
+collection = _load_or_build_index()
 
 # Единая формулировка личности ассистента — используется только тут (раньше
 # в разных местах проекта встречались разные формулировки: "ассистент
@@ -192,6 +214,25 @@ async def chat(req: ChatRequest) -> ChatResponse:
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+
+# --------------------------------------------------------------------------
+# Отдаём сайт (frontend/) и картинки (images/) этим же процессом — один
+# backend, один порт, один процесс вместо двух (`uvicorn` + отдельный
+# `python -m http.server`). Раньше frontend/index.html грузил картинки по
+# пути "../images/..." — это ломалось при запуске `python -m http.server`
+# из папки frontend (сервер не видит файлы выше своей папки). Здесь монтируем
+# images/ отдельно, и относительный "../images/..." браузер сам сводит к
+# "/images/..." — уже работает.
+#
+# ВАЖНО: порядок mount() имеет значение. "/" — это "поймай всё, что не
+# подошло выше" (html=True отдаёт index.html на "/"), поэтому и "/images",
+# и все @app.* роуты (/chat, /health) обязаны быть объявлены раньше него —
+# иначе "/" перехватит их первым.
+# --------------------------------------------------------------------------
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+app.mount("/images", StaticFiles(directory=os.path.join(PROJECT_ROOT, "images")), name="images")
+app.mount("/", StaticFiles(directory=os.path.join(PROJECT_ROOT, "frontend"), html=True), name="frontend")
 
 
 def build_fallback_answer(query: str, similar_items: List[Dict[str, Any]]) -> str:
