@@ -2,7 +2,6 @@ import os
 
 import chromadb
 from dotenv import load_dotenv
-from gigachat import GigaChat
 
 from .rag_index import (
     CHROMA_DIR,
@@ -19,16 +18,11 @@ from .rag_index import (
 
 load_dotenv()
 
-EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "local")
-GIGACHAT_CREDENTIALS = os.getenv("GIGACHAT_CREDENTIALS")
-GIGACHAT_MODEL = os.getenv("GIGACHAT_MODEL", "GigaChat-2")
-
-giga = None
-if EMBEDDING_PROVIDER.lower() == "gigachat":
-    if not GIGACHAT_CREDENTIALS:
-        raise RuntimeError("GIGACHAT_CREDENTIALS is required when EMBEDDING_PROVIDER=gigachat.")
-    giga = GigaChat(credentials=GIGACHAT_CREDENTIALS, model=GIGACHAT_MODEL, verify_ssl_certs=False)
-embedding_function = create_embedding_function(EMBEDDING_PROVIDER, giga)
+# Индекс строится только локальной embedding-функцией — без внешнего API,
+# без GigaChat, без сетевых вызовов и без токенов. GigaChat в этом файле
+# больше не участвует вообще (раньше был опциональный путь через
+# EMBEDDING_PROVIDER=gigachat — его убрали как ненужный для этого проекта).
+embedding_function = create_embedding_function()
 
 
 def _is_text_separator(line: str) -> bool:
@@ -160,17 +154,13 @@ def main():
     except Exception:
         pass
 
-    index_metadata = {"embedding_provider": EMBEDDING_PROVIDER.lower().strip()}
-    if EMBEDDING_PROVIDER.lower().strip() == "local":
-        index_metadata["local_embedding_version"] = LOCAL_EMBEDDING_VERSION
-
     collection = client.get_or_create_collection(
         name=COLLECTION_NAME,
         embedding_function=embedding_function,
-        metadata=index_metadata,
+        metadata={"local_embedding_version": LOCAL_EMBEDDING_VERSION},
     )
 
-    print(f"Embedding {len(items)} items via {EMBEDDING_PROVIDER} and adding to ChromaDB...")
+    print(f"Embedding {len(items)} items locally and adding to ChromaDB...")
     collection.add(ids=ids, documents=documents, metadatas=metadatas)
 
     print(f"Index built and saved to {CHROMA_DIR} (collection: {COLLECTION_NAME})")

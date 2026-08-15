@@ -180,6 +180,7 @@ img {
 .education,
 .services {
   background-size: 112%;
+  background-repeat: no-repeat;
 }
 
 .about {

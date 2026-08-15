@@ -8,7 +8,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from gigachat import GigaChat
 from gigachat.models import Chat, Messages, MessagesRole
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .history_store import load_history, save_history
 from .rag_index import CHROMA_DIR, COLLECTION_NAME, TOKEN_RE, create_embedding_function, load_index, search_similar
@@ -19,9 +19,12 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("faq_assistant")
 
-EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "local")
 GIGACHAT_CREDENTIALS = os.getenv("GIGACHAT_CREDENTIALS")
-GIGACHAT_MODEL = os.getenv("GIGACHAT_MODEL", "GigaChat-2")
+# По умолчанию — самый дешёвый тир (Lite). Раньше по умолчанию было голое
+# "GigaChat-2" без тира, что, похоже, резолвилось в более дорогой Max —
+# теперь это нужно указать явно и осознанно через .env, если когда-нибудь
+# понадобится модель мощнее.
+GIGACHAT_MODEL = os.getenv("GIGACHAT_MODEL", "GigaChat-2-Lite")
 IVAN_TELEGRAM = os.getenv("IVAN_TELEGRAM", "https://t.me/Ivan_Paro")
 
 giga = None
@@ -29,7 +32,7 @@ if GIGACHAT_CREDENTIALS:
     giga = GigaChat(credentials=GIGACHAT_CREDENTIALS, model=GIGACHAT_MODEL, verify_ssl_certs=False)
 else:
     logger.warning("GIGACHAT_CREDENTIALS не задан — бот будет отвечать только по FAQ, без LLM.")
-embedding_function = create_embedding_function(EMBEDDING_PROVIDER, giga)
+embedding_function = create_embedding_function()
 
 app = FastAPI(title="FAQ RAG Assistant")
 
@@ -58,7 +61,7 @@ app.add_middleware(
 
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(min_length=1, max_length=2000)
     top_k: int = 3
     session_id: str | None = None
 
@@ -69,7 +72,7 @@ class ChatResponse(BaseModel):
     session_id: str
 
 
-collection = load_index(CHROMA_DIR, COLLECTION_NAME, embedding_function, provider=EMBEDDING_PROVIDER)
+collection = load_index(CHROMA_DIR, COLLECTION_NAME, embedding_function)
 
 # Единая формулировка личности ассистента — используется только тут (раньше
 # в разных местах проекта встречались разные формулировки: "ассистент
@@ -158,6 +161,7 @@ async def chat(req: ChatRequest) -> ChatResponse:
         + history
         + [current_user_message],
         temperature=0.2,
+        max_tokens=500,  # FAQ-ответы короткие; без лимита модель может расписаться на выход
     )
 
     if giga is None:

@@ -40,10 +40,10 @@ ChromaDB не делает эмбеддинги сама — get_or_create_colle
 - backend/app.py — FastAPI, CORS по ALLOWED_ORIGINS (не *, allow_credentials=False), /chat, /health, build_fallback_answer()
 - backend/rag_index.py — LocalEmbeddingFunction, create_embedding_function(), load_index(), search_similar(), load_tech_stack()
 - backend/build_index.py — парсер TXT (Вопрос:/Ответ:, пропуск БЛОК, ===, ---), загрузка faqs.json + все data/*.txt + tech_stack.json, delete_collection() + add()
-- backend/history_store.py — init_db(), WAL, sqlite3.connect(..., check_same_thread=False), INSERT OR REPLACE, cleanup_old_sessions(TTL_DAYS=30) раз в CLEANUP_INTERVAL=21600s
+- backend/history_store.py — _get_connection(), WAL, sqlite3.connect(..., check_same_thread=False), INSERT ... ON CONFLICT DO UPDATE, _maybe_cleanup(TTL_DAYS=30) раз в CLEANUP_INTERVAL=21600s
 - frontend/index.html, style.css, script.js — лендинг, модалка 32 технологии, тогглы скиллов (12 видимых + Показать ещё), scroll-reveal IntersectionObserver(threshold=0), сессия localStorage faq_chat_session_id
 - data/qa_database.txt, tech_stack.json, chroma_db/, sessions.db
-- requirements.txt — fastapi, uvicorn[standard], chromadb==0.5.5, gigachat==0.1.40, python-dotenv==1.0.1
+- requirements.txt — fastapi, uvicorn[standard], httpx==0.28.1, chromadb==1.5.9, gigachat==0.2.3, python-dotenv==1.0.1
 
 ## Установка
 
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 
 .env в корне:
 GIGACHAT_CREDENTIALS=ваш_ключ
-GIGACHAT_MODEL=GigaChat-2
+GIGACHAT_MODEL=GigaChat-2-Lite   # опционально, это и так значение по умолчанию — самый дешёвый тир
 ALLOWED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000,http://localhost:5500,https://ваш-домен
 IVAN_TELEGRAM=https://t.me/Ivan_Paro
 SYSTEM_PROMPT=опционально
