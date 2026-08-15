@@ -20,11 +20,13 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 logger = logging.getLogger("faq_assistant")
 
 GIGACHAT_CREDENTIALS = os.getenv("GIGACHAT_CREDENTIALS")
-# По умолчанию — самый дешёвый тир (Lite). Раньше по умолчанию было голое
-# "GigaChat-2" без тира, что, похоже, резолвилось в более дорогой Max —
-# теперь это нужно указать явно и осознанно через .env, если когда-нибудь
-# понадобится модель мощнее.
-GIGACHAT_MODEL = os.getenv("GIGACHAT_MODEL", "GigaChat-2-Lite")
+# По документации GigaChat API (developers.sber.ru/docs/ru/gigachat/guides/
+# selecting-a-model): в поле model допустимые значения — "GigaChat-2",
+# "GigaChat-2-Pro", "GigaChat-2-Max", "GigaChat-3-Ultra". Самый быстрый и
+# дешёвый — именно "GigaChat-2" (без суффикса) — это то же самое, что в
+# прайс-листе называется "GigaChat 2 Lite" (это маркетинговое название, не
+# значение для API). "GigaChat-2-Lite" как строка для API не существует.
+GIGACHAT_MODEL = os.getenv("GIGACHAT_MODEL", "GigaChat-2")
 IVAN_TELEGRAM = os.getenv("IVAN_TELEGRAM", "https://t.me/Ivan_Paro")
 
 giga = None

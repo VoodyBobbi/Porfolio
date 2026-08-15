@@ -1,93 +1,61 @@
-# Портфолио Ивана Паро — сайт + FAQ RAG-ассистент
+# Портфолио + FAQ-ассистент
 
-Статический лендинг + чат-виджет. Отвечает на вопросы про стек, опыт, процесс и стоимость по локальной базе знаний `data/qa_database.txt` и `data/tech_stack.json`. GigaChat используется только для генерации финального ответа, поиск по базе — полностью локальный.
+Сайт-портфолио с чат-виджетом. Чат отвечает на вопросы про Ивана: стек, проекты, процесс работы, цены, сроки. Ответы ищутся в локальной базе (`data/`), GigaChat только красиво их формулирует.
 
-## Архитектура
+## Структура
 
-frontend/index.html, style.css, script.js
-  -> POST /chat (API_BASE = localhost:8000 локально / /api в проде)
-  -> backend/app.py (FastAPI, /chat, /health)
-  -> backend/rag_index.py (LocalEmbeddingFunction + ChromaDB data/chroma_db/)
-  -> backend/app.py: giga.chat() или build_fallback_answer()
-  -> backend/history_store.py (data/sessions.db, SQLite WAL, TTL 30 дней)
+- `frontend/` — сайт (HTML/CSS/JS).
+- `backend/` — API на FastAPI.
+- `data/qa_database.txt`, `data/tech_stack.json` — база знаний, редактируете сами.
+- `data/chroma_db/`, `data/sessions.db` — создаются автоматически при запуске. В Git не нужны.
 
-Поток в app.py:
-1. Валидация ChatRequest.message (Pydantic, max 2000)
-2. load_history(session_id) — последние 12 сообщений
-3. search_similar(collection, query, k=top_k) — ChromaDB query -> LocalEmbeddingFunction.__call__
-4. Сборка context_text из найденных FAQ + системный промпт
-5. Chat(messages=[SYSTEM,...history, user+context]) -> giga.chat(chat) или фолбэк
-6. save_history(session_id, user+assistant)
+## Запуск (Windows, Python 3.11)
 
-## Поиск и эмбеддинги
+1. `py -3.11 -m venv venv`
+2. `venv\Scripts\activate`
+3. `$env:PYTHONUTF8 = "1"` — нужно, если в пути к проекту есть русские буквы.
+4. `pip install -r requirements.txt`
+5. Создать `.env` в корне проекта:
+   ```env
+   GIGACHAT_CREDENTIALS=ваш_ключ
+   ```
+   Без ключа бот тоже работает — просто отвечает готовыми фразами из базы, без GigaChat.
+6. Собрать базу знаний: `python -m backend.build_index`
+7. Запустить backend: `uvicorn backend.app:app --reload --host 127.0.0.1 --port 8000`
+8. Во втором терминале запустить frontend:
+   ```powershell
+   cd frontend
+   python -m http.server 5500
+   ```
 
-Только локальные, внешних запросов на этапе поиска нет.
+Сайт: http://127.0.0.1:5500
+Проверка backend: http://127.0.0.1:8000/health
 
-backend/rag_index.py: LocalEmbeddingFunction:
-- hashing trick: bag-of-words + char 4-grams
-- Токенизация: TOKEN_RE = [0-9A-Za-zА-Яа-яЁё]+, lowercased
-- Хеш: blake2b(key, digest_size=8), индекс % 1536, знак по 5-му байту
-- Веса: слово w:token = 1.0, 4-грамма n:xxxx = 0.4 для слов >4 символов
-- L2 нормализация, размерность LOCAL_EMBEDDING_DIMENSIONS = 1536
-- Версия LOCAL_EMBEDDING_VERSION = "2-ngram-1536d" пишется в collection.metadata
+## Обновить базу знаний
 
-ChromaDB не делает эмбеддинги сама — get_or_create_collection(embedding_function=...) и collection.query() делегируют в LocalEmbeddingFunction.__call__.
+1. Отредактировать `data/qa_database.txt` или `data/tech_stack.json`.
+2. `python -m backend.build_index`
+3. Перезапустить backend.
 
-Индекс: data/chroma_db/, коллекция faqs. Проверка версии при load_index() — если версия не совпала -> RuntimeError с требованием python -m backend.build_index.
+## Как это работает
 
-## Структура проекта
+Вопрос на сайте → backend ищет похожее в базе → если есть ключ GigaChat, формулирует ответ через него → если ключа нет или GigaChat недоступен, отвечает готовым ответом из базы.
 
-- backend/app.py — FastAPI, CORS по ALLOWED_ORIGINS (не *, allow_credentials=False), /chat, /health, build_fallback_answer()
-- backend/rag_index.py — LocalEmbeddingFunction, create_embedding_function(), load_index(), search_similar(), load_tech_stack()
-- backend/build_index.py — парсер TXT (Вопрос:/Ответ:, пропуск БЛОК, ===, ---), загрузка faqs.json + все data/*.txt + tech_stack.json, delete_collection() + add()
-- backend/history_store.py — _get_connection(), WAL, sqlite3.connect(..., check_same_thread=False), INSERT ... ON CONFLICT DO UPDATE, _maybe_cleanup(TTL_DAYS=30) раз в CLEANUP_INTERVAL=21600s
-- frontend/index.html, style.css, script.js — лендинг, модалка 32 технологии, тогглы скиллов (12 видимых + Показать ещё), scroll-reveal IntersectionObserver(threshold=0), сессия localStorage faq_chat_session_id
-- data/qa_database.txt, tech_stack.json, chroma_db/, sessions.db
-- requirements.txt — fastapi, uvicorn[standard], httpx==0.28.1, chromadb==1.5.9, gigachat==0.2.3, python-dotenv==1.0.1
+## Доп. настройки в .env (не обязательны)
 
-## Установка
-
-py -3.11 -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
-
-.env в корне:
-GIGACHAT_CREDENTIALS=ваш_ключ
-GIGACHAT_MODEL=GigaChat-2-Lite   # опционально, это и так значение по умолчанию — самый дешёвый тир
-ALLOWED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000,http://localhost:5500,https://ваш-домен
-IVAN_TELEGRAM=https://t.me/Ivan_Paro
-SYSTEM_PROMPT=опционально
-
-## Индексация
-
-python -m backend.build_index
-
-## Запуск
-
-uvicorn backend.app:app --reload --host 127.0.0.1 --port 8000
-cd frontend && python -m http.server 5500
-
-GET /health -> {"status":"ok"}
-
-POST /chat:
-{"message":"Чем занимается Иван?","top_k":3,"session_id":"опционально"}
-
-build_fallback_answer() считает пересечение токенов запроса и каждого документа по TOKEN_RE, берет max score, если score=0 -> ведет в Telegram IVAN_TELEGRAM
+| Переменная | Зачем | Если не задано |
+|---|---|---|
+| `GIGACHAT_MODEL` | какую модель GigaChat использовать | `GigaChat-2` — самая дешёвая и быстрая |
+| `ALLOWED_ORIGINS` | с каких доменов разрешены запросы к backend | только localhost |
+| `IVAN_TELEGRAM` | куда бот направляет, если не может ответить | `https://t.me/Ivan_Paro` |
+| `SYSTEM_PROMPT` | полностью своя инструкция для ассистента | встроенная в код |
 
 ## Деплой
 
-location /api/ {
-  proxy_pass http://127.0.0.1:8000/;
-}
-location / {
-  root /path/to/frontend;
-}
-
-frontend/script.js API_BASE: localhost/127.0.0.1 -> http://127.0.0.1:8000, иначе /api. Добавьте домен в ALLOWED_ORIGINS.
-
-## Ограничения
-
-- gigaChat verify_ssl_certs=False — включите в проде
-- history_store check_same_thread=False — не для workers>1, для масштаба Redis
-- Rate-limit на /chat добавьте на Nginx
-- Локальный эмбеддинг не ловит синонимы без общих букв (цена/стоимость)
+- Домен сайта нужно добавить в `ALLOWED_ORIGINS`.
+- Frontend ждёт backend по адресу `/api` — настраивается через Nginx:
+  ```nginx
+  location /api/ {
+      proxy_pass http://127.0.0.1:8000/;
+  }
+  ```

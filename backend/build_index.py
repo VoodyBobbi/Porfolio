@@ -7,11 +7,9 @@ from .rag_index import (
     CHROMA_DIR,
     COLLECTION_NAME,
     DATA_DIR,
-    DATA_PATH,
     LOCAL_EMBEDDING_VERSION,
     TECH_JSON_PATH,
     create_embedding_function,
-    load_faq_data,
     load_tech_stack,
 )
 
@@ -117,11 +115,6 @@ def load_txt_documents(directory: str):
 def main():
     items = []
 
-    if os.path.exists(DATA_PATH):
-        faqs = load_faq_data(DATA_PATH)
-        items.extend(faqs)
-        print(f"Loaded {len(faqs)} FAQ items from faqs.json")
-
     txt_docs = load_txt_documents(DATA_DIR)
     items.extend(txt_docs)
     print(f"Loaded {len(txt_docs)} TXT documents from {DATA_DIR}")
@@ -132,14 +125,14 @@ def main():
         print(f"Loaded {len(tech_items)} technology items from tech_stack.json")
 
     if not items:
-        raise RuntimeError("No data found to build index (no faqs.json and no txt files).")
+        raise RuntimeError("No data found to build index (no txt files).")
 
     documents = [f"{item['question']}\n{item['answer']}" for item in items]
     metadatas = [
         {
             "question": item["question"],
             "answer": item["answer"],
-            "source": item.get("source", "faqs.json"),
+            "source": item.get("source", "unknown"),
         }
         for item in items
     ]
